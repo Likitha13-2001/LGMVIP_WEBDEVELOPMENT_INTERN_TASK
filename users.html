@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Card Grid</title>
+  <style>
+    
+    .navbar {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      position: relative;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+    }
+
+
+    .user-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-gap: 20px;
+      padding: 20px;
+    }
+
+    .user-card {
+      border: 2px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+      
+    }
+
+    .user-card img {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 10px;
+     
+     
+    }
+
+    .user-card h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .user-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #888;
+    }
+    #get-users-btn {
+  position: absolute;
+  top: 10px; 
+  right: 10px;
+  padding: auto; 
+}
+
+    
+ 
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <span class="navbar-brand">USER DATA</span>
+    
+    <button id="get-users-btn">Get Users</button>
+
+  </div>
+
+  <div class="user-card-grid">
+   
+  </div>
+
+  <div class="loader" id="loader"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var getUsersButton = document.getElementById("get-users-btn");
+      var userCardGrid = document.querySelector(".user-card-grid");
+      var loader = document.getElementById("loader");
+
+      getUsersButton.addEventListener("click", function() {
+        loader.style.display = "block";
+        getUsers();
+      });
+
+      function getUsers() {
+        // Make an API call to get user data
+        fetch("https://reqres.in/api/users?page=1")
+          .then(response => response.json())
+          .then(data => {
+            loader.style.display = "none";
+            renderUserCards(data.data);
+          })
+          .catch(error => {
+            loader.style.display = "none";
+            console.error("Error fetching user data:", error);
+          });
+      }
+
+      function renderUserCards(users) {
+        var userCardHTML = "";
+
+        users.forEach(function(user) {
+          userCardHTML += `
+            <div class="user-card">
+               
+              <img src="${user.avatar}" alt="User Avatar"> 
+              <h3>ID:${user.id}</h3>
+              <h3>${user.first_name} ${user.last_name}</h3>
+              <p>Email: ${user.email}</p>
+            </div>
+          `;
+        });
+
+        userCardGrid.innerHTML = userCardHTML;
+      }
+    });
+  </script>
+</body>
+</html>
